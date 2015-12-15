@@ -35,7 +35,7 @@ public class WinnerActivity extends AppCompatActivity {
         result = (TextView)findViewById(R.id.result);
 
         String winner = i.getStringExtra(TictactoeActivity.WIN);
-        result.setText(winner);
+        result.setText("le gagnant est = " + winner);
     }
 
     @Override

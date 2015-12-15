@@ -10,15 +10,21 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String TICTACTOE_KEY = "id";
-    public static final String TICTACTOE_JOUEUR = "joueur";
-    public static final String TICTACTOE_POS = "positions";
+    public static final String TICTACTOE_PLAYER1 = "player1";
+    public static final String TICTACTOE_PLAYER2 = "player2";
+    public static final String TICTACTOE_POSP1 = "posp1";
+    public static final String TICTACTOE_POSP2 = "posp2";
+    public static final String TICTACTOE_TOUR = "tour";
 
     public static final String TICTACTOE_TABLE_NAME = "tictactoe";
     public static final String TICTACTOE_TABLE_CREATE =
             "CREATE TABLE " + TICTACTOE_TABLE_NAME + " (" +
                     TICTACTOE_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    TICTACTOE_JOUEUR + " TEXT, " +
-                    TICTACTOE_POS + " REAL);";
+                    TICTACTOE_PLAYER1 + " TEXT, "+
+                    TICTACTOE_PLAYER2 + " TEXT, " +
+                    TICTACTOE_POSP1 + " REAL, " +
+                    TICTACTOE_POSP2 + " REAL, " +
+                    TICTACTOE_TOUR + " INTEGER);";
 
     public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);

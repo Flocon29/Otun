@@ -1,45 +1,27 @@
 package enib.otun;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-public class TictactoeActivity extends AppCompatActivity {
+public class TictactoeActivity extends Activity {
     private ImageView case1, case2, case3, case4, case5, case6, case7, case8, case9;
-    private int visitedp1[];
-    private int visitedp2[];
-    private int tour = 0;
-    private String winner = null;
+    private String winner;
     protected final static String WIN = "winner du jeu";
+    private int coche = R.mipmap.vide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tictactoe);
 
-        for(int k=0;k<9;++k)
-        {
-            this.visitedp1[k]=0;
-            this.visitedp2[k]=0;
-        }
+        final Tictactoe t = (Tictactoe)getIntent().getSerializableExtra("TICTACTOE");
 
-        tour = 0;
-        winner = null;
+        final TictactoeDAO tictactoeDAO = new TictactoeDAO(this);
 
-        Intent i = getIntent();
-        String P1 = i.getStringExtra(NewGameActivity.P1);
-        String P2 = i.getStringExtra(NewGameActivity.P2);
-
-        final Tictactoe t = new Tictactoe(P1, P2, visitedp1, visitedp2);
-        TictactoeDAO tictactoeDAO = new TictactoeDAO(this);
 
         tictactoeDAO.open();
         tictactoeDAO.insertTictactoe(t);
@@ -54,216 +36,280 @@ public class TictactoeActivity extends AppCompatActivity {
         case8 = (ImageView) findViewById(R.id.case8);
         case9 = (ImageView) findViewById(R.id.case9);
 
+        for (int i =0; i<8;i++){
+            if(t.getPosp1()[i]==1){
+                coche = R.mipmap.croix;
+            }
+            else if(t.getPosp2()[i]==1){
+                coche = R.mipmap.cercle;
+            }
+            if (i==0){
+                case1.setImageResource(coche);
+            }
+            if (i==1){
+                case2.setImageResource(coche);
+            }
+            if (i==2){
+                case3.setImageResource(coche);
+            }
+            if (i==3){
+                case4.setImageResource(coche);
+            }
+            if (i==4){
+                case5.setImageResource(coche);
+            }
+            if (i==5){
+                case6.setImageResource(coche);
+            }
+            if (i==6){
+                case7.setImageResource(coche);
+            }
+            if (i==7){
+                case8.setImageResource(coche);
+            }
+            if (i==8){
+                case9.setImageResource(coche);
+            }
+            coche = R.mipmap.vide;
+        }
+
         case1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int pos=0;
-                if(visitedp1[pos]!=1 && visitedp2[pos]!=1)
+                if(t.getPosp1()[pos]!=1 && t.getPosp2()[pos]!=1)
                 {
-                    if(tour%2==0)
+                    if(t.getTour()%2==0)
                     {
                         case1.setImageResource(R.mipmap.croix);
-                        visitedp1[pos]=1;
-                        t.setPosp1(visitedp1);
+                        t.getPosp1()[pos]=1;
+                        t.setPosp1(t.getPosp1());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
                     else
                     {
                         case1.setImageResource(R.mipmap.cercle);
-                        visitedp2[pos]=1;
-                        t.setPosp2(visitedp2);
+                        t.getPosp2()[pos]=1;
+                        t.setPosp2(t.getPosp2());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
-                    check(visitedp1,visitedp2);
-                    tour++;
+                    check(t.getPosp1(), t.getPosp2(), tictactoeDAO, t, t.getPlayer1(), t.getPlayer2());
                 }
             }
         });
 
         case2.setOnClickListener(new View.OnClickListener() {
-            int pos=1;
             @Override
             public void onClick(View v) {
-                if(visitedp1[pos]!=1 && visitedp2[pos]!=1)
+                int pos=1;
+                if(t.getPosp1()[pos]!=1 && t.getPosp2()[pos]!=1)
                 {
-                    if(tour%2==0) {
+                    if(t.getTour()%2==0) {
                         case2.setImageResource(R.mipmap.croix);
-                        visitedp1[pos]=1;
-                        t.setPosp1(visitedp1);
+                        t.getPosp1()[pos]=1;
+                        t.setPosp1(t.getPosp1());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
                     else
                     {
                         case2.setImageResource(R.mipmap.cercle);
-                        visitedp2[pos]=1;
-                        t.setPosp2(visitedp2);
+                        t.getPosp2()[pos]=1;
+                        t.setPosp2(t.getPosp2());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
-                    check(visitedp1,visitedp2);
-                    tour++;
+                    check(t.getPosp1(),t.getPosp2(),tictactoeDAO,t,t.getPlayer1(), t.getPlayer2());
                 }
             }
         });
 
         case3.setOnClickListener(new View.OnClickListener() {
-            int pos=2;
             @Override
             public void onClick(View v) {
-                if(visitedp1[pos]!=1 && visitedp2[pos]!=1)
+                int pos=2;
+                if(t.getPosp1()[pos]!=1 && t.getPosp2()[pos]!=1)
                 {
-                    if(tour%2==0) {
+                    if(t.getTour()%2==0) {
                         case3.setImageResource(R.mipmap.croix);
-                        visitedp1[pos]=1;
-                        t.setPosp1(visitedp1);
+                        t.getPosp1()[pos]=1;
+                        t.setPosp1(t.getPosp1());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
                     else
                     {
                         case3.setImageResource(R.mipmap.cercle);
-                        visitedp2[pos]=1;
-                        t.setPosp2(visitedp2);
+                        t.getPosp2()[pos]=1;
+                        t.setPosp2(t.getPosp2());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
-                    check(visitedp1,visitedp2);
-                    tour++;
+                    check(t.getPosp1(), t.getPosp2(), tictactoeDAO, t, t.getPlayer1(), t.getPlayer2());
                 }
             }
         });
 
         case4.setOnClickListener(new View.OnClickListener() {
-            int pos=3;
             @Override
             public void onClick(View v) {
-                if(visitedp1[pos]!=1 && visitedp2[pos]!=1)
+                int pos=3;
+                if(t.getPosp1()[pos]!=1 && t.getPosp2()[pos]!=1)
                 {
-                    if(tour%2==0) {
+                    if(t.getTour()%2==0) {
                         case4.setImageResource(R.mipmap.croix);
-                        visitedp1[pos]=1;
-                        t.setPosp1(visitedp1);
+                        t.getPosp1()[pos]=1;
+                        t.setPosp1(t.getPosp1());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
                     else
                     {
                         case4.setImageResource(R.mipmap.cercle);
-                        visitedp2[pos]=1;
-                        t.setPosp2(visitedp2);
+                        t.getPosp2()[pos]=1;
+                        t.setPosp2(t.getPosp2());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
-                    check(visitedp1,visitedp2);
-                    tour++;
+                    check(t.getPosp1(), t.getPosp2(), tictactoeDAO, t, t.getPlayer1(), t.getPlayer2());
                 }
             }
         });
 
         case5.setOnClickListener(new View.OnClickListener() {
-            int pos=4;
             @Override
             public void onClick(View v) {
-                if(visitedp1[pos]!=1 && visitedp2[pos]!=1)
+                int pos=4;
+                if(t.getPosp1()[pos]!=1 && t.getPosp2()[pos]!=1)
                 {
-                    if(tour%2==0) {
+                    if(t.getTour()%2==0) {
                         case5.setImageResource(R.mipmap.croix);
-                        visitedp1[pos]=1;
-                        t.setPosp1(visitedp1);
+                        t.getPosp1()[pos]=1;
+                        t.setPosp1(t.getPosp1());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
                     else
                     {
                         case5.setImageResource(R.mipmap.cercle);
-                        visitedp2[pos]=1;
-                        t.setPosp2(visitedp2);
+                        t.getPosp2()[pos]=1;
+                        t.setPosp2(t.getPosp2());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
-                    check(visitedp1,visitedp2);
-                    tour++;
+                    check(t.getPosp1(), t.getPosp2(), tictactoeDAO, t, t.getPlayer1(), t.getPlayer2());
                 }
             }
         });
 
         case6.setOnClickListener(new View.OnClickListener() {
-            int pos=5;
             @Override
             public void onClick(View v) {
-                if(visitedp1[pos]!=1 && visitedp2[pos]!=1)
+                int pos=5;
+                if(t.getPosp1()[pos]!=1 && t.getPosp2()[pos]!=1)
                 {
-                    if(tour%2==0) {
+                    if(t.getTour()%2==0) {
                         case6.setImageResource(R.mipmap.croix);
-                        visitedp1[pos]=1;
-                        t.setPosp1(visitedp1);
+                        t.getPosp1()[pos]=1;
+                        t.setPosp1(t.getPosp1());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
                     else
                     {
                         case6.setImageResource(R.mipmap.cercle);
-                        visitedp2[pos]=1;
-                        t.setPosp2(visitedp2);
+                        t.getPosp2()[pos]=1;
+                        t.setPosp2(t.getPosp2());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
-                    check(visitedp1,visitedp2);
-                    tour++;
+                    check(t.getPosp1(), t.getPosp2(), tictactoeDAO, t, t.getPlayer1(), t.getPlayer2());
                 }
             }
         });
 
         case7.setOnClickListener(new View.OnClickListener() {
-            int pos=6;
             @Override
             public void onClick(View v) {
-                if(visitedp1[pos]!=1 && visitedp2[pos]!=1)
+                int pos=6;
+                if(t.getPosp1()[pos]!=1 && t.getPosp2()[pos]!=1)
                 {
-                    if(tour%2==0) {
+                    if(t.getTour()%2==0) {
                         case7.setImageResource(R.mipmap.croix);
-                        visitedp1[pos]=1;
-                        t.setPosp1(visitedp1);
+                        t.getPosp1()[pos]=1;
+                        t.setPosp1(t.getPosp1());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
                     else
                     {
                         case7.setImageResource(R.mipmap.cercle);
-                        visitedp2[pos]=1;
-                        t.setPosp2(visitedp2);
+                        t.getPosp2()[pos]=1;
+                        t.setPosp2(t.getPosp2());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
-                    check(visitedp1,visitedp2);
-                    tour++;
+                    check(t.getPosp1(), t.getPosp2(), tictactoeDAO, t, t.getPlayer1(), t.getPlayer2());
                 }
             }
         });
 
         case8.setOnClickListener(new View.OnClickListener() {
-            int pos=7;
             @Override
             public void onClick(View v) {
-                if(visitedp1[pos]!=1 && visitedp2[pos]!=1)
+                int pos=7;
+                if(t.getPosp1()[pos]!=1 && t.getPosp2()[pos]!=1)
                 {
-                    if(tour%2==0) {
+                    if(t.getTour()%2==0) {
                         case8.setImageResource(R.mipmap.croix);
-                        visitedp1[pos]=1;
-                        t.setPosp1(visitedp1);
+                        t.getPosp1()[pos]=1;
+                        t.setPosp1(t.getPosp1());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
                     else
                     {
                         case8.setImageResource(R.mipmap.cercle);
-                        visitedp2[pos]=1;
-                        t.setPosp2(visitedp2);
+                        t.getPosp2()[pos]=1;
+                        t.setPosp2(t.getPosp2());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
-                    check(visitedp1,visitedp2);
-                    tour++;
+                    check(t.getPosp1(),t.getPosp2(),tictactoeDAO,t,t.getPlayer1(), t.getPlayer2());
                 }
             }
         });
 
         case9.setOnClickListener(new View.OnClickListener() {
-            int pos=8;
             @Override
             public void onClick(View v) {
-                if(visitedp1[pos]!=1 && visitedp2[pos]!=1)
+                int pos=8;
+                if(t.getPosp1()[pos]!=1 && t.getPosp2()[pos]!=1)
                 {
-                    if(tour%2==0) {
+                    if(t.getTour()%2==0) {
                         case9.setImageResource(R.mipmap.croix);
-                        visitedp1[pos]=1;
-                        t.setPosp1(visitedp1);
+                        t.getPosp1()[pos]=1;
+                        t.setPosp1(t.getPosp1());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
                     else
                     {
                         case9.setImageResource(R.mipmap.cercle);
-                        visitedp2[pos]=1;
-                        t.setPosp2(visitedp2);
+                        t.getPosp2()[pos]=1;
+                        t.setPosp2(t.getPosp2());
+                        t.setTour(t.getTour() + 1);
+                        tictactoeDAO.updateTictactoe(t);
                     }
-                    check(visitedp1,visitedp2);
-                    tour++;
+                    check(t.getPosp1(),t.getPosp2(),tictactoeDAO,t,t.getPlayer1(), t.getPlayer2());
                 }
             }
         });
     }
 
-    public void check(int visitedp1[], int visitedp2[]) {
+    public void check(byte visitedp1[], byte visitedp2[], TictactoeDAO tdao, Tictactoe t, String P1, String P2) {
 
         //player1
         if ((visitedp1[0] == 1) && (visitedp1[4] == 1) && (visitedp1[8] == 1)
@@ -274,8 +320,7 @@ public class TictactoeActivity extends AppCompatActivity {
                 ||(visitedp1[0] == 1) && (visitedp1[1] == 1) && (visitedp1[2] == 1)
                 ||(visitedp1[3] == 1) && (visitedp1[4] == 1) && (visitedp1[5] == 1)
                 ||(visitedp1[6] == 1) && (visitedp1[7] == 1) && (visitedp1[8] == 1)) {
-            winner = "Joueur 1 gagne";
-            this.onStop(winner);
+            this.onStop(P1,tdao,t);
         }
 
         //player2
@@ -288,21 +333,28 @@ public class TictactoeActivity extends AppCompatActivity {
                 ||(visitedp2[3] == 1) && (visitedp2[4] == 1) && (visitedp2[5] == 1)
                 ||(visitedp2[6] == 1) && (visitedp2[7] == 1) && (visitedp2[8] == 1)) {
             winner = "Joueur 2 gagne";
-            this.onStop(winner);
+            this.onStop(P2,tdao,t);
         }
 
         //Egalité
-        if (tour==8){
-            winner = "Egalites";
-            this.onStop(winner);
+        if (t.getTour()==8){
+            this.onStop("Egalites",tdao,t);
         }
     }
 
-    protected void onStop(String winner) {
+    protected void onStop(String winner, TictactoeDAO tdao, Tictactoe t) {
         super.onStop();
         Intent intent_fin = new Intent(TictactoeActivity.this, WinnerActivity.class);
         intent_fin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent_fin.putExtra(WIN, winner);
+        tdao.removeTictactoe(t.getId());
         startActivity(intent_fin);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent_close = new Intent(TictactoeActivity.this, MainActivity.class);
+        intent_close.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent_close);
     }
 }

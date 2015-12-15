@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,10 +16,10 @@ public class NewGameActivity extends AppCompatActivity {
 
     private Button btn_tictactoe;
     private Button btn_bataille;
-    public String player1;
-    public String player2;
-    protected final static String P1 = "player1";
-    protected final static String P2 = "player2";
+    private String player1 = "gars";
+    private String player2 = "fille";
+    private byte visitedp1[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private byte visitedp2[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +43,10 @@ public class NewGameActivity extends AppCompatActivity {
         btn_tictactoe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Tictactoe tictactoe = new Tictactoe(player1,player2,visitedp1,visitedp2);
                 Intent intent_tictactoe = new Intent(NewGameActivity.this, TictactoeActivity.class);
                 intent_tictactoe.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent_tictactoe.putExtra(P1, "gars");
-                intent_tictactoe.putExtra(P2, "fille");
+                intent_tictactoe.putExtra("TICTACTOE", tictactoe);
                 startActivity(intent_tictactoe);
             }
         });

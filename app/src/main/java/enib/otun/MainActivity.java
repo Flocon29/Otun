@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
+    //Déclaration des boutons
     private Button btn_newGame;
     private Button btn_loadGame;
 
